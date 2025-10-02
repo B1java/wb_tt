@@ -1,11 +1,13 @@
 import knex, { migrate, seed } from "#postgres/knex.js";
 import { getRandomNum } from "#utils/genRandomRes.js";
+
 import cron from "node-cron";
 
 import "#utils/sheets.js";
 import { writeValues as writeValuesToSheet } from "#utils/sheets.js";
 
 import type { WarehouseType } from "#types/types.js";
+
 
 await migrate.latest();
 await seed.run();
@@ -37,3 +39,4 @@ async function sendDataToSheets() {
         writeValuesToSheet(sheetId, dataArr);
     }
 }
+

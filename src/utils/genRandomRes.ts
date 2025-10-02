@@ -34,6 +34,7 @@ function randomizeData(data: any): any {
     } else {
         return getRandomValue(data);
     }
+
 }
 
 // пример использования
@@ -64,3 +65,4 @@ function getRandomNum(): wbResponseType {
 }
 
 export { getRandomNum };
+
