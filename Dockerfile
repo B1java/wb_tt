@@ -8,6 +8,7 @@ COPY ./package*.json .
 RUN npm install --omit=dev
 
 FROM deps-prod AS build
+ENV NODE_OPTIONS=--max-old-space-size=2048
 
 RUN npm install --include=dev
 
