@@ -1,6 +1,6 @@
 import knex, { migrate, seed } from "#postgres/knex.js";
 import { getRandomNum } from "#utils/genRandomRes.js";
-import { retrieveIds } from './utils/sheetsGetter.js'
+import { sheets } from './utils/dbSheets.js'
 
 import cron from "node-cron";
 
@@ -19,6 +19,7 @@ cron.schedule(
     "00 * * * *",
     async () => {
         await fetchData();
+        await sendDataToSheets()
     },
     { timezone: "Europe/Moscow" },
 );
@@ -28,9 +29,8 @@ async function fetchData() {
 }
 
 async function sendDataToSheets() {
-    // placeholder for sheets getter from a db
-    // const sheetsIds = [{spreadsheet_id:"14jRsnVBkDLNZUbvi54-5huAAXSzxi-Jrn7SkGrm4fYw"}];
-    const sheetsIds: SheetId[] = await retrieveIds(knex)
+    // [{spreadsheet_id:"14jRsnVBkDLNZUbvi54-5huAAXSzxi-Jrn7SkGrm4fYw"}]
+    const sheetsIds: SheetId[] = await sheets.getId(knex)
     const fetchedData: WarehouseType = (getRandomNum().data.warehouseList as WarehouseType[])[0];
 
     const dataArr: string[] = [];
@@ -42,6 +42,3 @@ async function sendDataToSheets() {
         writeValuesToSheet(sheetId.spreadsheet_id, dataArr);
     }
 }
-
-const res = await retrieveIds(knex)
-console.log(res)
