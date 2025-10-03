@@ -18,7 +18,7 @@ async function writeValues(sheetId: string, requestData: string[]) {
     requestData.push(currentDate);
     await sheets.spreadsheets.values.append({
         spreadsheetId: sheetId,
-        range: "Sheet1!A1",
+        range: "stocks_coefs!A1",
         valueInputOption: "USER_ENTERED",
         insertDataOption: "INSERT_ROWS",
         requestBody: { values: [requestData] },
