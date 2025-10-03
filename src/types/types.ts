@@ -20,4 +20,8 @@ type wbResponseType = {
     };
 };
 
-export { wbResponseType, WarehouseType };
+type SheetId = {
+    spreadsheet_id: string
+}
+
+export { wbResponseType, WarehouseType, SheetId };
