@@ -1,3 +1,5 @@
+// This file was made for testing purposes. 
+
 import { wbResponseType } from "#types/types.js";
 
 function getRandomValue(original: string | number): string | number {

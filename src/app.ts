@@ -14,7 +14,7 @@ console.log("All migrations and seeds have been run");
 
 
 cron.schedule(
-    "00 23 * * *",
+    "59 23 * * *",
     async () => {
         const fetchedData = await fetchData();
         await sendDataToSheets(knex, fetchedData);
@@ -23,7 +23,7 @@ cron.schedule(
 );
 
 cron.schedule(
-    "00s * * * *",
+    "00 * * * *",
     async () => {
         const fetchedData = await fetchData();
         await sendDataToDb(knex, fetchedData);

@@ -1,8 +1,5 @@
 import { sheetsAuth } from "./authentication.js";
 import { sheet } from "./dbSheets.js";
-import { sendDataToDb } from "#utils/db/dbData.js";
-import { fetchData } from "#utils/wb/fetchApi.js";
-import { getRandomNum } from "#utils/genRandomRes.js";
 
 import type { WarehouseType, SheetId } from "#types/types.js";
 import { Knex } from "knex";
