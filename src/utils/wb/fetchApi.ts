@@ -1,9 +1,22 @@
 import { getRandomNum } from "#utils/genRandomRes.js";
+import env from "#config/env/env.js";
 
 import type { WarehouseType } from "#types/types.js";
 
 async function fetchData(): Promise<WarehouseType> {
-    return getRandomNum().data.warehouseList[0];
+    const response = await fetch('https://www.google.com/url?q=https://common-api.wildberries.ru/api/v1/tariffs/box', {
+        method: 'GET',
+        headers: {
+            'HeaderApiKey': env.WB_APIKEY,
+        }
+    })
+
+    if (!response.ok) {
+        throw new Error(`Ошибка: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data
 }
 
 export { fetchData }

@@ -14,21 +14,18 @@ console.log("All migrations and seeds have been run");
 
 
 cron.schedule(
-    "* * * * *",
+    "00 23 * * *",
     async () => {
         const fetchedData = await fetchData();
-        console.log('Data fetched');
         await sendDataToSheets(knex, fetchedData);
-        console.log('Data sent to sheets');
     },
     { timezone: "Europe/Moscow" },
 );
 
 cron.schedule(
-    "* * * * *",
+    "00s * * * *",
     async () => {
         const fetchedData = await fetchData();
-        console.log('Data fetched #2')
         await sendDataToDb(knex, fetchedData);
     },
     { timezone: "Europe/Moscow" },
