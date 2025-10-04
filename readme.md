@@ -1,54 +1,134 @@
-# Шаблон для выполнения тестового задания
-
 ## Описание
-Шаблон подготовлен для того, чтобы попробовать сократить трудоемкость выполнения тестового задания.
 
-В шаблоне настоены контейнеры для `postgres` и приложения на `nodejs`.  
-Для взаимодействия с БД используется `knex.js`.  
-В контейнере `app` используется `build` для приложения на `ts`, но можно использовать и `js`.
+Этот гит-репо позволяет получать ежечасно получать данные с АПИ wb, скапливать их в БД и раз в день сохранять последнее спаршеное значение в проивзольное количество Google sheets.
+Проект работает внутри docker на node js с postgresql и knex js как ORM.
 
-Шаблон не является обязательным!\
-Можно использовать как есть или изменять на свой вкус.
+## Быстрый старт
 
-Все настройки можно найти в файлах:
-- compose.yaml
-- dockerfile
-- package.json
-- tsconfig.json
-- src/config/env/env.ts
-- src/config/knex/knexfile.ts
+Для работы скрипта нам нужно подготовить:
 
-## Команды:
+- Google аккаунт
+- Google cloud проект
+- Google service аккаунт
 
-Запуск базы данных:
+### Подготовка google Cloud аккаунта
+
+1. Если нет аккаунта google, идем на google.com и регистрируем его.
+2. Далее, переходим на [google cloud](https://console.cloud.google.com/cloud-resource-manager), создаем новый проект ("Create project").
+3. После, нам нужно включить АПИ [sheets](https://console.cloud.google.com/apis/library/sheets.googleapis.com) и [drive](https://console.cloud.google.com/apis/library/drive.googleapis.com) ("Enable").
+4. Далее, идем в [Credentials](https://console.cloud.google.com/apis/credentials), создаем Service Account ("Create credentials" -> "Service account"), в Permissions выбираем роль "Basic" -> "Editor".
+5. Нажимаем на строку с новым service аккаунтом, сверху выбираем "Keys", нажимаем "Add key" -> "Create new key" -> "JSON". Вам на устройство скачается .json ключ, он будет использоваться далее.
+
+### Подготовка google таблиц
+
+1. Созданый service аккаунт нужно добавить **во все** гугл таблицы в качестве редактора.
+2. Страница, на которую будут отгружаться все данные, должна называться `stocks_coefs`.
+   **БЕЗ ЭТИХ ДВУХ ДЕЙСТВИЙ СКРИПТ РАБОТАТЬ НЕ БУДЕТ!** .
+
+### Копирование репозитория и подготовка зависимостей
+
+Клонируем гит репу:
+
 ```bash
-docker compose up -d --build postgres
+git clone https://github.com/B1java/wb_tt.git
 ```
 
-Для выполнения миграций и сидов не из контейнера:
-```bash
-npm run knex:dev migrate latest
-```
+#### Установка на Linux Ubuntu
+
+Устанавливаем docker:
 
 ```bash
-npm run knex:dev seed run
-```
-Также можно использовать и остальные команды (`migrate make <name>`,`migrate up`, `migrate down` и т.д.)
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-Для запуска приложения в режиме разработки:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+Устанавливаем docker compose:
+
 ```bash
-npm run dev
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-Запуск проверки самого приложения:
+Устанавливаем npm:
+
 ```bash
-docker compose up -d --build app
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 ```
 
-Для финальной проверки рекомендую:
+Переходим в рабочую директорию, устанавливаем зависимости и копируем `.env`:
+
 ```bash
-docker compose down --rmi local --volumes
-docker compose up --build
+cd wb_tt
+npm i
+cp example.env .env
 ```
 
-PS: С наилучшими пожеланиями!
+#### Установка на Windows
+
+Клонируем гит репу:
+
+```bash
+git clone https://github.com/B1java/wb_tt.git
+```
+
+Скачиваем и устанавливаем [Docker Desktop](https://www.docker.com/products/docker-desktop/) и [npm](https://nodejs.org/en/download).
+
+Заходим в POWERSHELL в директорию проекта, устанавливаем зависимости:
+
+```bash
+cd wb_tt
+npm i
+```
+
+Копируем `.env`
+
+```bash
+Copy-Item -Path "example.env" -Destination ".env"
+```
+
+## Запуск скрипта
+
+Вписываем в `.env` свои значения `WB_APIKEY` и `GOOGLE_SHEETS_IDS`. Таблицы вписываются в формате `table-id_1,table-id_2` - через `,` без пробелов.
+
+Запускаем скрипт
+
+```bash
+docker compose up -d --build
+```
+
+## Полезные команды
+
+Посмотреть логи
+
+```bash
+docker compose logs
+```
+
+Остановить контейнеры
+
+```bash
+docker compose down
+```
+
+Остановить контейнеры и удалить все данные из хранилищ:
+
+```bash
+docker compose down -v
+```
