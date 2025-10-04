@@ -13,7 +13,8 @@ async function addNewId(knex: Knex, spreadsheetId: string): Promise<void> {
         .ignore();
 }
 
-export const sheets = {
+
+export const sheet = {
     getId: async (knex: Knex) =>
         await retrieveIds(knex),
     addId: async (knex: Knex, spreadsheetId: string) =>

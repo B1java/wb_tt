@@ -5,20 +5,16 @@ function getRandomValue(original: string | number): string | number {
 
     if (!isNaN(num)) {
         if (num < 1) {
-            // от 0 до 1, два знака после запятой
             return Math.random().toFixed(2);
         }
         if (num >= 1 && num < 100) {
-            // от 10 до 100, целое
             return Math.floor(Math.random() * 91) + 10;
         }
         if (num >= 100 && num < 1000) {
-            // от 100 до 500, целое
             return Math.floor(Math.random() * 401) + 100;
         }
     }
 
-    // если не число — вернуть как есть
     return original;
 }
 
@@ -37,7 +33,6 @@ function randomizeData(data: any): any {
 
 }
 
-// пример использования
 const response = {
     data: {
         dtNextBox: "2024-02-01",
