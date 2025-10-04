@@ -109,6 +109,8 @@ Copy-Item -Path "example.env" -Destination ".env"
 
 Вписываем в `.env` свои значения `WB_APIKEY` и `GOOGLE_SHEETS_IDS`. Таблицы вписываются в формате `table-id_1,table-id_2` - через `,` без пробелов.
 
+В папку `keys` вставляем полученый ранее ключ и переименовываем его в `googleKey.json`.
+
 Запускаем скрипт
 
 ```bash
