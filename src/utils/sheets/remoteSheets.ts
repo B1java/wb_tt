@@ -18,7 +18,6 @@ async function writeValues(sheetId: string, requestData: string[]) {
 }
 
 async function sendDataToSheets(knex: Knex, fetchedData: WarehouseType): Promise<void> {
-    // [{spreadsheet_id:"14jRsnVBkDLNZUbvi54-5huAAXSzxi-Jrn7SkGrm4fYw"}]
     const sheetsIds: SheetId[] = await sheet.getId(knex)
 
     const dataArr: string[] = [];
@@ -30,7 +29,6 @@ async function sendDataToSheets(knex: Knex, fetchedData: WarehouseType): Promise
         writeValues(sheetId.spreadsheet_id, dataArr);
     }
 }
-
 
 
 export { sendDataToSheets }

@@ -67,4 +67,5 @@ const knegConfigs: Record<typeof NODE_ENV, Knex.Config> = {
     },
 };
 
+
 export default knegConfigs[NODE_ENV];
